@@ -39,7 +39,6 @@ def rune_tid():
 def rune_trykk_bar():
     temp     = []    
     with open('trykk_og_temperaturlogg_rune_time.csv.txt') as data_rune:
-
         reader = csv.reader(data_rune, delimiter=';')
         for row in reader:
             temp.append(row[2])
