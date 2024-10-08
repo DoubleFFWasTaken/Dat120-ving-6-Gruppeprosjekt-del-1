@@ -2,7 +2,33 @@
 
 import csv
 
+class SolaData: 
+    def __init__(self, filnavn):
+        self.filnavn = filnavn
+        self.time     = []
+        self.trykk   = []
+        self.temp    = []
+        self.LesData()  
 
+    def LesData(self):
+        with open(self.filnavn) as data_Sola:
+            reader = csv.reader(data_Sola, delimiter=';')
+            for i, row in enumerate(reader):  # enumerate(reader) gir både indeksen (int) i og row-listen fra reader.
+                if "Navn" not in row[0] and "Data" not in row[0]: #for å skippe forklarings linja
+                    for j in range(360):
+                        self.time .append(j)
+                        self.temp .append(row[3])
+                        self.trykk.append(row[4])                
+
+    def solaTid(self):
+        return self.time
+
+    def solaTrykk(self):
+        return self.trykk
+
+    def solaTrykkAbs(self):
+        return self.trykk
+    
 # en class er bare en funksjon med funksjoner inni
 class RuneData:
     #self er bare et vanlig variabelnavn, basically det det gjør er å call-e på seg selv. forklaring under
@@ -31,6 +57,15 @@ class RuneData:
                     self.trykk_bar .append(0)
                     self.trykk_abs .append(0)
                     self.temparatur.append(0)
+                sola_data = SolaData("temperatur_trykk_met_samme_rune_time_datasett.csv.txt")
+                solatid = sola_data.solaTid()
+                           
+                for i in range(len(solatid) - len(self.tid)):
+                    if "am" not in row[0] and "pm" not in row[0] and "Dato" not in row[0]: 
+                        self.tid       .append(int(self.tid[-1])+10)
+                        self.trykk_bar .append(0)
+                        self.trykk_abs .append(0)
+                        self.temparatur.append(0)
 
     #Disse funksjonene returnerer da listene vi ser etter, hvis ikke så bare eksisterer de tomt
     #skal forklare senere hvordan vi får tak i de
@@ -47,33 +82,7 @@ class RuneData:
         return self.trykk_abs
     
 
-class SolaData: 
-    def __init__(self, filnavn):
-        self.filnavn = filnavn
-        self.tid     = []
-        self.trykk   = []
-        self.temp    = []
-        self.LesData()  
 
-    def LesData(self):
-        with open(self.filnavn) as data_Sola:
-            reader = csv.reader(data_Sola, delimiter=';')
-            for i, row in enumerate(reader):  # enumerate(reader) git både indeksen (int) i og row-listen fra reader.
-                    if "Navn" not in row[0] and "Data" not in row[0]: #for å skippe forklarings linja
-                        for j in range(360):
-                            self.tid  .append(j)
-                            self.temp .append(row[3])
-                            self.trykk.append(row[4])                
-
-    def solaTid(self):
-        return self.tid
-
-    def solaTrykk(self):
-        return self.trykk
-
-    def solaTrykkAbs(self):
-        return self.trykk
-    
 # Create an instance of the class
 rune_data = RuneData('trykk_og_temperaturlogg_rune_time.csv.txt')
 sola_data = SolaData("temperatur_trykk_met_samme_rune_time_datasett.csv.txt")
@@ -81,5 +90,14 @@ sola_data = SolaData("temperatur_trykk_met_samme_rune_time_datasett.csv.txt")
 solatid = sola_data.solaTid()
 ruetid = rune_data.runeTid()
 
-print(len(ruetid))
-print(len(solatid))
+
+def list_duplicates(seq):
+  seen = set()
+  seen_add = seen.add
+  # adds all elements it doesn't know yet to seen and all other to seen_twice
+  seen_twice = set( x for x in seq if x in seen or seen_add(x) )
+  # turn the set into a list (as requested)
+  return list( seen_twice )
+
+list_duplicates(ruetid)
+
