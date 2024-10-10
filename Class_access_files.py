@@ -15,6 +15,7 @@ class SolaData:
             reader = csv.reader(data_Sola, delimiter=';')
             for i, row in enumerate(reader):  # enumerate(reader) gir både indeksen (int) i og row-listen fra reader.
                 if "Navn" not in row[0] and "Data" not in row[0]: #for å skippe forklarings linja
+                    print(row[3])
                     for j in range(360):
                         self.time .append(j)
                         self.temp .append(row[3])
