@@ -4,70 +4,64 @@ import datetime as dt
 
 class Data(): 
     def __init__(self, filnavn):
-        #BYTT DISSE MED REELLE VARIABELNAVN
+
         self.filnavn  = filnavn
-        self.år       = []
-        self.måned    = []
-        self.dag      = []
-        self.rad3     = []
-        self.solflekker = []
-        self.gj       = []
-        self.rad6     = []
-        self.rad7     = []
-        self.datetime = []
-        self.målinger = []
+
+        self.solaTemp    = []
+        self.solaTid     = []
+    
+        self.SaudaTemp   = []
+        self.SaudaTid    = []
+    
+        self.SinnesTemp  = []
+        self.SinnesTid   = []
+    
+        self.RuneTemp    = []
+        self.RuneTid     = []
+
         self.LesData()  
 
     def LesData(self):
         with open(self.filnavn, "r", encoding="utf-8") as file:
             reader = csv.reader(file, delimiter=';') 
 
+#sjekker hvilke fil vi er i og formaterer data korrekt
             for i, row in enumerate(reader): 
-                
-                self.år     .append(row[0].strip()) 
-                self.måned  .append(row[1].strip())                
-                self.dag    .append(row[2].strip())
-                
-                self.solflekker.append(float(row[4].strip()))
-                self.målinger  .append(i)
-
-
                 try:
-                    time_str = f"{row[2]}.{row[1]}.{row[0]}"
-                    base_time = dt.datetime.strptime(time_str, "%d.%m.%Y")
-                    self.datetime.append(base_time)
+                    if "Sinnes" in row:
+                        return 0
+                        #sinnes data
+
+                    if "Sauda" in row:
+                        return 0
+                        #bytt med sauda data
+
+                    if "Sola" in row:
+                        return 0
+                        #sola data
+
+                    #kan egentlig bytte alle if med dette:
+                    if self.filnavn == "Filer/trykk_og_temperaturlogg_rune_time.csv.txt":
+                    
+                        if "am" not in row:
+                            return 0
+                        
+                        if "am" in row:
+                            return 0
+                        
+
                 except Exception as e:
-                    print(e, "line:", i)                    
+                    print(f"Error processing row {i}: {e}")
 
-    def yearly_avg(self):
+            """
         
-        årlig_max = {}
-        årlig_min = {}
-        årlig_gj  = {}
+            time_str = f"{row[2]}.{row[1]}.{row[0]}"
+            base_time = dt.datetime.strptime(time_str, "%d.%m.%Y")
+            self.datetime.append(base_time)
+               
+            """
 
-        
-        for i, date in enumerate(self.datetime):
-            
-            years = (date.year)
-            verdi = self.solflekker[i]
-
-            
-            if years not in årlig_max:
-                årlig_max[years] = []
-                årlig_min[years] = []
-                årlig_gj [years] = []
-
-            
-            årlig_max[years].append(verdi)
-            årlig_min[years].append(verdi)
-            årlig_gj [years].append(verdi)
-
-            #dict        = {år : verdi}
-        self.årlig_maks  = {key: max(values) for key, values in årlig_max.items()}
-        self.årlig_min   = {key: min(values) for key, values in årlig_min.items()}
-        self.årlig_gj    = {key: sum(values) / len(values) for key, values in årlig_gj.items()}
-    # dictionary årlig_max er definert av å ta max-verdien fra verdier fra måneden key(0->n), i listen med alle max-verdier
-
+#endre disse til å passe listene fra tidligere, pass på at datoene og listene skal være like, vurderer å bruke arrays eller dictionaries
 
     def år_max(self):
         if not hasattr(self, 'årlig_maks'):
