@@ -18,6 +18,7 @@ class Data():
     
         self.RuneTemp    = []
         self.RuneTid     = []
+        self.RuneTrykk   = []
 
         self.LesData()  
 
@@ -27,43 +28,77 @@ class Data():
 
 #sjekker hvilke fil vi er i og formaterer data korrekt
             for i, row in enumerate(reader): 
-                try:
-                    if "Sinnes" in row:
-                        return 0
-                        #sinnes data
+                
+                if "Sinnes" in row:
+                    return 0
+                    #sinnes data
 
-                    if "Sauda" in row:
-                        return 0
-                        #bytt med sauda data
+                if "Sauda" in row:
+                    return 0
+                    #bytt med sauda data
 
-                    if "Sola" in row:
-                        return 0
-                        #sola data
+                if "Sola" in row:
+                    return 0
+                    #sola data
 
-                    #kan egentlig bytte alle if med dette:
-                    if self.filnavn == "Filer/trykk_og_temperaturlogg_rune_time.csv.txt":
-                    
-                        if "am" not in row:
-                            time_str = row[0]
-                            base_time = dt.datetime.strptime(time_str,"%m.%d.%Y %H:%M")
-                            self.RuneTid.append(base_time)
-                            self.RuneTemp.append(row[4])
+                if self.filnavn == "Filer/trykk_og_temperaturlogg_rune_time.csv.txt":
+                    try:
+                        time_str = row[0]
                         
-                        if "am" in row:
-                            time_str = row[0]
-                            base_time = dt.datetime.strptime(time_str,"%m/%d/%Y %I:%M:%S %p")
-                            self.RuneTemp.append(row[4])
-                        else: 
-                            print(f"feil i linje {i}, {row[0]}")   
+                        try:
+                            seconds_offset = int(row[1])  
+                        except ValueError:
+                            print(f"Skipping row {i} due to invalid seconds: {row[1]}")
+                            continue
+
+                        if 'am' in time_str.lower() or 'pm' in time_str.lower():
+                            base_time = dt.datetime.strptime(time_str, "%m/%d/%Y %H:%M:%S %p")
+                        else:
+                            base_time = dt.datetime.strptime(time_str, "%m.%d.%Y %H:%M")
                         
+                        time_obj = base_time + dt.timedelta(seconds=seconds_offset)
+                        self.RuneTid.append(time_obj)
 
-                except Exception as e:
-                    print(f"Error processing row {i}: {e}")
+                        trykk_value = row[4].replace(',', '.') if row[4] else None
+                        temp_value = row[3].replace(',', '.') if row[3] else None
+
+                        if temp_value:
+                            self.RuneTemp.append(float(temp_value)) 
+                        else:
+                            self.RuneTemp.append(None)
+
+                        if trykk_value:
+                            self.RuneTrykk.append(float(trykk_value))
+                        else:
+                            self.RuneTrykk.append(None)
+                            
+                    except Exception as e:
+                        print(f"Error processing row {i}: {e}")
 
 
+    def Solatemp(self):
+        return self.solaTemp
 
-#endre disse til å passe listene fra tidligere
+    def Solatid(self):    
+        return self.solaTid
+        
+    def Saudatemp(self):    
+        return self.SaudaTemp
 
+    def Saudatid(self):    
+        return self.SaudaTid
 
-    def Data_1(self):
-        return self.liste
+    def Sinnestemp(self):    
+        return self.SinnesTemp
+    
+    def Sinnestid(self):    
+        return self.SinnesTid    
+
+    def Runetemp(self):    
+        return self.RuneTemp
+
+    def Runetid(self):    
+        return self.RuneTid
+
+    def Runetrykk(self):
+        return self.RuneTrykk
