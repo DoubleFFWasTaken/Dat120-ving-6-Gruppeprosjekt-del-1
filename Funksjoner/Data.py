@@ -9,37 +9,70 @@ class Data():
 
         self.solaTemp    = []
         self.solaTid     = []
+        self.solaTrykk   = []
     
         self.SaudaTemp   = []
         self.SaudaTid    = []
+        self.SaudaTrykk  = []
     
         self.SinnesTemp  = []
         self.SinnesTid   = []
-    
+        self.SinnesTrykk = []    
+
         self.RuneTemp    = []
         self.RuneTid     = []
         self.RuneTrykk   = []
 
-        self.LesData()  
+        self.LesData()
+  
 
     def LesData(self):
         with open(self.filnavn, "r", encoding="utf-8") as file:
             reader = csv.reader(file, delimiter=';') 
 
-#sjekker hvilke fil vi er i og formaterer data korrekt
+#sjekker hvilken fil vi er i og formaterer data korrekt
+
             for i, row in enumerate(reader): 
-                
+
+                if "Data er gyldig" in row[0]:
+                    print(f"Skipping non-data row {i}: {row}")
+                    continue
+
+                if "navn" in row[0]:
+                    print(f"Skipping non-data row {i}: {row}")
+                    continue
+
+
                 if "Sinnes" in row:
-                    return 0
-                    #sinnes data
+                    time_str = row[2]
+                    base_time = dt.datetime.strptime(time_str, "%d.%m.%Y %H:%M")
+
+                    self.SinnesTid.append(base_time)
+
+                    self.SinnesTemp.append(float(row[3].replace(',', '.'))) 
+                    self.SinnesTrykk.append(float(row[4].replace(',', '.')))
+
 
                 if "Sauda" in row:
-                    return 0
-                    #bytt med sauda data
+                    time_str = row[2]
+                    base_time = dt.datetime.strptime(time_str, "%d.%m.%Y %H:%M")
 
-                if "Sola" in row:
-                    return 0
-                    #sola data
+                    self.SaudaTid.append(base_time)
+
+                    self.SaudaTemp.append(float(row[3].replace(',', '.')))
+                    self.SaudaTrykk.append(float(row[4].replace(',', '.')))
+
+
+
+                if "Sola" in row:                
+                    time_str = row[2]
+                    base_time = dt.datetime.strptime(time_str, "%d.%m.%Y %H:%M")
+
+                    self.solaTid.append(base_time)
+
+                    self.solaTemp.append(float(row[3].replace(',', '.'))) 
+                    self.solaTrykk.append(float(row[4].replace(',', '.')))
+
 
                 if self.filnavn == "Filer/trykk_og_temperaturlogg_rune_time.csv.txt":
                     try:
@@ -75,7 +108,6 @@ class Data():
                     except Exception as e:
                         print(f"Error processing row {i}: {e}")
 
-
     def Solatemp(self):
         return self.solaTemp
 
@@ -102,3 +134,15 @@ class Data():
 
     def Runetrykk(self):
         return self.RuneTrykk
+    
+    def Sinnestrykk(self):
+        return self.SinnesTrykk
+    
+    def Saudatrykk(self):
+        return self.SaudaTrykk 
+
+    def SolaTrykk(self):
+        return self.solaTrykk
+    
+
+
