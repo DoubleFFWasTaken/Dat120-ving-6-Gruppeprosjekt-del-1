@@ -54,7 +54,7 @@ class Data():
                     print(f"Error processing row {i}: {e}")
 
             """
-        
+         
             time_str = f"{row[2]}.{row[1]}.{row[0]}"
             base_time = dt.datetime.strptime(time_str, "%d.%m.%Y")
             self.datetime.append(base_time)
