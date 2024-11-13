@@ -1,4 +1,3 @@
-
 import csv
 import datetime as dt
 
@@ -22,6 +21,13 @@ class Data():
         self.RuneTemp    = []
         self.RuneTid     = []
         self.RuneTrykk   = []
+        
+        self.trykk_forskjell = {}
+        self.temp_forskjell = {}
+        self.maksTempforskjell = 0
+        self.minTempforskjell = 0
+        self.maksTrykkforskjell = 0
+        self.minTrykkforskjell = 0
         
         self.LesData()
   
@@ -107,6 +113,28 @@ class Data():
                             
                     except Exception as e:
                         print(f"Error processing row {i}: {e}")
+                
+    def GjennomsnittTempogTrykk(self):
+
+        for i in range(self.solaTid):
+            for j in range(self.runeTid):
+                if self.solaTid[i] == self.runeTid[j]:
+                    self.trykk_forskjell[(self.solaTid[i], self.runeTid[j])] = (self.solaTrykk[i] + self.runeTrykk[j]) / 2
+                    self.temp_forskjell[(self.solaTid[i], self.runeTid[j])] = (self.solaTemp[i] + self.runeTemp[j]) / 2
+                    
+        if self.trykk_forskjell:
+            maks_trykk = max(self.trykk_forskjell, key=self.trykk_forskjell.get)
+            min_trykk = min(self.trykk_forskjell, key=self.trykk_forskjell.get)
+
+            self.maksTrykkforskjell = maks_trykk
+            self.minTrykkforskjell = min_trykk
+
+        if self.temp_forskjell:
+            maks_temp = max(self.temp_forskjell, key=self.temp_forskjell.get)
+            min_temp = min(self.temp_forskjell, key=self.temp_forskjell.get)
+            
+            self.maksTempforskjell = maks_temp
+            self.minTempforskjell = min_temp
 
     def Solatemp(self):
         return self.solaTemp
@@ -144,5 +172,11 @@ class Data():
     def SolaTrykk(self):
         return self.solaTrykk
     
-
-
+    def GjennomsnittTempogTrykk(self):
+        return print(self.maksTempforskjell)
+    def GjennomsnittTempogTrykk(self):
+        return print(self.minTempforskjell)
+    def GjennomsnittTempogTrykk(self):
+        return print(self.maksTrykkforskjell)
+    def GjennomsnittTempogTrykk(self):
+        return print(self.minTrykkforskjell)
