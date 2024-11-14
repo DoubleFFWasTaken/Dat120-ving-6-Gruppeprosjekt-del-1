@@ -100,21 +100,33 @@ maksForskjelltrykk_resultat, minForskjelltrykk_resultat, makstrykkforskjelltid_r
     solatid, solatrykk, runetid, runetrykkAbs
 )
 
-print(f"Den største trykkforskjellen var {maksForskjelltrykk_resultat} ved {maksForskjelltrykk_resultat}.")
+print(f"Den største trykkforskjellen var {maksForskjelltrykk_resultat} ved {makstrykkforskjelltid_resultat}.")
 print(f"Den minste trykkforskjellen var ved {minForskjelltrykk_resultat} ved {minstrykkforskjelltid_resultat}.")
 
 
-def TempForskjell():
+def TempForskjell(solatid, runetid, solatemparatur, runetemp):
     maksForskjelltemp = float('-inf')
+    makstempforskjelltid = 0
     minForskjelltemp = float('inf')
+    mintempforskjelltid = 0
     for i in range(len(solatid)):
         for j in range(len(runetid)):
             if solatid[i] == runetid[j]:
                 differanse = abs(solatemparatur[i] - runetemp[j])
                 if differanse > maksForskjelltemp:
                     maksForskjelltemp = differanse
+                    makstempforskjelltid = solatid[i]
                 if differanse < minForskjelltemp:
                     minForskjelltemp = differanse
+                    mintempforskjelltid = solatid[i]
+    return maksForskjelltemp, makstempforskjelltid, minForskjelltemp, mintempforskjelltid
+
+maksForskjelltemp_resultat, minForskjelltemp_resultat, makstempforskjelltid_resultat, minstempforskjelltid_resultat = TempForskjell(
+    solatid, solatemparatur, runetid, runetemp
+)
+
+print(f"Den største temperaturforskjellen var {maksForskjelltemp_resultat} ved {makstempforskjelltid_resultat}.")
+print(f"Den minste temperaturforskjellen var ved {minForskjelltemp_resultat} ved {minstempforskjelltid_resultat}.")
 
 
         
