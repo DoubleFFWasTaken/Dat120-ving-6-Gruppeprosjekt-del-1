@@ -2,7 +2,7 @@ import csv
 import datetime as dt
 
 class Data(): 
-    def __init__(self, filnavn):
+    def __init__(self, filnavn=None):
 
         self.filnavn  = filnavn
 
@@ -22,11 +22,17 @@ class Data():
         self.RuneTid     = []
         self.RuneTrykk   = []
         
-        self.maksForskjell = float('-inf')
-        self.minForskjell = float('inf')
-        self.gjennomsnittforskjellTemp = 0
-        self.gjennomsnittforskjellTrykk = 0
-        
+        self.maksForskjelltrykk = float('-inf')
+        self.minForskjelltrykk = float('inf')
+        self.maksForskjelltemp = float('-inf')
+        self.minForskjelltemp = float('inf')
+        self.gjenforskjellTemp = 0
+        self.gjenforskjellTrykk = 0
+
+        self.TrykkForskjell()
+        self.TempForskjell()
+        self.GjennomsnittTempogTrykk()
+
         self.LesData()
   
 
@@ -111,60 +117,53 @@ class Data():
                             
                     except Exception as e:
                         print(f"Error processing row {i}: {e}")
-    
-    def TempogTrykkForskjell(self):
+''' 
+    def TrykkForskjell(self):
         try: 
-            for i in range(self.solaTid):
-                for j in range(self.RuneTid):
+            for i in range(len(self.solaTid)):
+                for j in range(len(self.RuneTid)):
                     if self.solaTid[i] == self.RuneTid[j]:
                         differanse = abs(self.solaTrykk[i] - self.RuneTrykk[j])
-                        if differanse > self.maksForskjell:
-                            self.maksForskjell = differanse
-                        if differanse < self.minForskjell:
-                            self.minForskjell = differanse
+                        if differanse > self.maksForskjelltrykk:
+                            self.maksForskjelltrykk = differanse
+                        if differanse < self.minForskjelltrykk:
+                            self.minForskjelltrykk = differanse
         except IndexError as e:
             print("IndexError:", e)
     
-    def GjennomsnittTempogTrykk(self):
-    
-        gjennomsnittSolaTemp = 0
-        gjennomsnittRuneTemp = 0
-        gjennomsnittSolatrykk = 0
-        gjennomsnittRunetrykk = 0
-        
-        TotalSolatemp = 0
-        TotalRunetemp = 0
-        TotalSolatrykk = 0
-        TotalRunetrykk = 0
-        
-        antallSolaTemp = 0
-        antallRuneTemp = 0
-        antallSolaTrykk = 0
-        antallRuneTrykk = 0
-        
-        for n in self.solaTemp():
-            TotalSolatemp += self.solaTemp[n]
-            antallSolaTemp += 1
-            for n in self.solaTrykk():
-                TotalSolatrykk += self.solaTrykk[n]
-                antallSolaTrykk += 1
-                
-        gjennomsnittSolaTemp = TotalSolatemp / antallSolaTemp
-        gjennomsnittSolatrykk = TotalSolatrykk / antallSolaTrykk
-                
-        for n in self.RuneTemp:
-            TotalRunetemp += self.RuneTemp()
-            antallRuneTemp += 1
-            for n in self.RuneTrykk():
-                TotalRunetrykk += self.RuneTrykk
-                antallRuneTrykk += 1
-        
-        gjennomsnittRuneTemp = TotalRunetemp / antallRuneTemp
-        gjennomsnittRunetrykk = TotalRunetrykk / antallRuneTrykk
-        
-        self.gjennomsnittforskjellTemp = abs(gjennomsnittSolaTemp - gjennomsnittRuneTemp) / 2
-        self.gjennomsnittforskjellTrykk = abs(gjennomsnittSolatrykk - gjennomsnittRunetrykk) / 2
+    def TempForskjell(self):
+        try: 
+            for i in range(len(self.solaTid)):
+                for j in range(len(self.RuneTid)):
+                    if self.solaTid[i] == self.RuneTid[j]:
+                        differanse = abs(self.solaTemp[i] - self.RuneTemp[j])
+                        if differanse > self.maksForskjelltemp:
+                            self.maksForskjelltemp = differanse
+                        if differanse < self.minForskjelltemp:
+                            self.minForskjelltemp = differanse
+        except IndexError as e:
+            print("IndexError:", e)
 
+    def GjennomsnittTempogTrykk(self):
+        TotalSolatemp = sum(self.solaTemp)
+        TotalRunetemp = sum(self.RuneTemp)
+        TotalSolatrykk = sum(self.solaTrykk)
+        TotalRunetrykk = sum(self.RuneTrykk)
+        
+        antallSolaTemp = len(self.solaTemp)
+        antallRuneTemp = len(self.RuneTemp)
+        antallSolaTrykk = len(self.solaTrykk)
+        antallRuneTrykk = len(self.RuneTrykk)
+        
+        gjennomsnittSolaTemp = TotalSolatemp / antallSolaTemp if antallSolaTemp > 0 else 0
+        gjennomsnittRuneTemp = TotalRunetemp / antallRuneTemp if antallRuneTemp > 0 else 0
+        gjennomsnittSolatrykk = TotalSolatrykk / antallSolaTrykk if antallSolaTrykk > 0 else 0
+        gjennomsnittRunetrykk = TotalRunetrykk / antallRuneTrykk if antallRuneTrykk > 0 else 0
+
+        self.gjenforskjellTemp = abs(gjennomsnittSolaTemp - gjennomsnittRuneTemp) / 2
+        self.gjenforskjellTrykk = abs(gjennomsnittSolatrykk - gjennomsnittRunetrykk) / 2
+
+'''
     def Solatemp(self):
         return self.solaTemp
 
@@ -201,19 +200,22 @@ class Data():
     def SolaTrykk(self):
         return self.solaTrykk
 
-    def GjennomsnittTempogTrykk(self):
-        return self.maksForskjell
+'''
+    def MaksForskjelltrykk(self):
+        return self.maksForskjelltrykk
     
-    def GjennomsnittTempogTrykk(self):
-        return self.minForskjell
-    
-    def GjennomsnittTempogTrykk(self):
-        return self.gjennomsnittforskjellTemp
-    
-    def GjennomsnittTempogTrykk(self):
-        return self.gjennomsnittforskjellTrykk
+    def MinForskjelltrykk(self):
+        return self.minForskjelltrykk
 
-print(Data.maksForskjell)
-print(Data.minForskjell)
-print(Data.gjennomsnittforskjellTemp)
-print(Data.gjennomsnittforskjellTrykk)
+    def MaksForskjelltemp(self):
+        return self.maksForskjelltemp
+    
+    def MinForskjelltemp(self):
+        return self.minForskjelltemp
+
+    def GjenforskjellTemp(self):
+        return self.gjenforskjellTemp
+    
+    def GjenforskjellTrykk(self):
+        return self.gjenforskjellTrykk
+'''

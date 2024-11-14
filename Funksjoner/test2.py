@@ -24,16 +24,6 @@ solatemparatur   = sola_instance.Solatemp        ()
 solatrykk        = sola_instance.SolaTrykk       ()
 solatid          = sola_instance.Solatid         ()
 
-'''
-frskjll_instance = Data()
-mxtrykkfrskjll   = frskjll_instance.MaksForskjelltrykk()
-mintrykkfrskjll  = frskjll_instance.MinForskjelltrykk()
-mxtempfrskjll    = frskjll_instance.MaksForskjelltemp()
-mintempfrskjll   = frskjll_instance.MinForskjelltemp()
-gjtempfrskjll    = frskjll_instance.GjenforskjellTemp()
-gjtrykkfrskjll   = frskjll_instance.GjenforskjellTrykk()
-'''
-
 hvilken          = int(input("0 graf, 1 histogram, 2 trykkforskjell"))
 
 if hvilken > 2:
@@ -88,33 +78,45 @@ if hvilken == 2:
 else: 
     print("feil input")
 
-'''
-def TrykkForskjell():
-    try: 
-        for i in range(len(solatid)):
-            for j in range(len(runetid)):
-                if solatid[i] == runetid[j]:
-                    differanse = abs(solatrykk[i] - runetrykkAbs[j])
-                    if differanse > self.maksForskjelltrykk:
-                        self.maksForskjelltrykk = differanse
-                    if differanse < self.minForskjelltrykk:
-                        self.minForskjelltrykk = differanse
-    except IndexError as e:
-        print("IndexError:", e)
+
+def TrykkForskjell(solatid, solatrykk, runetid, runetrykkAbs):
+    maksForskjelltrykk = float('-inf')
+    makstrykkforskjelltid = 0
+    minForskjelltrykk = float('inf')
+    mintrykkforskjelltid = 0
+    for i in range(len(solatid)):
+        for j in range(len(runetid)):
+            if solatid[i] == runetid[j]:
+                differanse = abs(solatrykk[i] - runetrykkAbs[j])
+                if differanse > maksForskjelltrykk:
+                    maksForskjelltrykk = differanse
+                    makstrykkforskjelltid = solatid[i]
+                if differanse < minForskjelltrykk:
+                    minForskjelltrykk = differanse
+                    mintrykkforskjelltid = solatid[i]
+    return maksForskjelltrykk, minForskjelltrykk, makstrykkforskjelltid, mintrykkforskjelltid
+
+maksForskjelltrykk_resultat, minForskjelltrykk_resultat, makstrykkforskjelltid_resultat, minstrykkforskjelltid_resultat = TrykkForskjell(
+    solatid, solatrykk, runetid, runetrykkAbs
+)
+
+print(f"Den største trykkforskjellen var {maksForskjelltrykk_resultat} ved {maksForskjelltrykk_resultat}.")
+print(f"Den minste trykkforskjellen var ved {minForskjelltrykk_resultat} ved {minstrykkforskjelltid_resultat}.")
+
 
 def TempForskjell():
-    try: 
-        for i in range(len(solatid)):
-            for j in range(len(runetid)):
-                if solatid[i] == runetid[j]:
-                    differanse = abs(solatemparatur[i] - runetemp[j])
-                    if differanse > self.maksForskjelltemp:
-                        self.maksForskjelltemp = differanse
-                    if differanse < self.minForskjelltemp:
-                        self.minForskjelltemp = differanse
-    except IndexError as e:
-        print("IndexError:", e)
-'''
+    maksForskjelltemp = float('-inf')
+    minForskjelltemp = float('inf')
+    for i in range(len(solatid)):
+        for j in range(len(runetid)):
+            if solatid[i] == runetid[j]:
+                differanse = abs(solatemparatur[i] - runetemp[j])
+                if differanse > maksForskjelltemp:
+                    maksForskjelltemp = differanse
+                if differanse < minForskjelltemp:
+                    minForskjelltemp = differanse
+
+
         
 def GjennomsnittTempogTrykk(solatemparatur, runetemp, solatrykk, runetrykkAbs):
     TotalSolatemp = sum(solatemparatur)
