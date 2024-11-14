@@ -5,7 +5,7 @@ import datetime as dt
 class Data(): 
     def __init__(self, filnavn):
 
-        self.filnavn  = filnavn
+        self.filnavn     = filnavn
 
         self.solaTemp    = []
         self.solaTid     = []
@@ -21,14 +21,8 @@ class Data():
 
         self.RuneTemp    = []
         self.RuneTid     = []
-<<<<<<< HEAD
-        self.RuneTrykk   = []
-        
-        self.LesData()
-=======
-        self.RuneTrykkAbs= []
         self.RuneTrykkBar= []
-        self.RuneGJ      = []
+        self.RuneTrykkAbs= []
 
         if self.filnavn  == "Filer/temperatur_trykk_met_samme_rune_time_datasett.csv.txt":
             self.Soladata  ()
@@ -38,9 +32,9 @@ class Data():
 
         if self.filnavn  == "Filer/temperatur_trykk_sauda_sinnes_samme_tidsperiode.csv.txt":
             self.Sirdaldata()
->>>>>>> dd1c33cddbf2060f3df322baaa30a6ef3ff2e2e0
-  
 
+
+        
     def Soladata(self):
             with open(self.filnavn, "r", encoding="utf-8") as file:
                 reader = csv.reader(file, delimiter=';') 
@@ -110,13 +104,12 @@ class Data():
                     if not self.RuneTid or self.RuneTid[-1] != base_time:
                         self.RuneTid     .append(base_time)
                         self.RuneTemp    .append(float(row[4].replace(',', '.')))
-                        #self.RuneTrykkAbs.append(float(row[3].replace(',', '.')))
-                        #self.RuneTrykkBar.append(float(row[2].replace(',', '.')))
+                        self.RuneTrykkAbs.append(float(row[3].replace(',', '.')))
+                        self.RuneTrykkBar.append(float(row[2].replace(',', '.')))
                         
                 except Exception as e:
                     print(f"Error processing row {i}: {e}")
                     continue
-
 
 
     def Solatemp(self):

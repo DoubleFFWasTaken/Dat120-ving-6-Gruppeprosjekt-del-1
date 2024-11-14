@@ -6,7 +6,6 @@ runetemp         = rune_instance.Runetemp        ()
 runetrykkAbs     = rune_instance.RunetrykkAbs    ()
 runetrykkBar     = rune_instance.RunetrykkBar    ()
 runetid          = rune_instance.Runetid         ()    
-#rune_gj          = rune_instance.GjennomsnittFunc()
 
 sirdal_instance  = Data("Filer/temperatur_trykk_sauda_sinnes_samme_tidsperiode.csv.txt")
 sinnestemp       = sirdal_instance.Sinnestemp    ()
@@ -23,7 +22,15 @@ solatemparatur   = sola_instance.Solatemp        ()
 solatrykk        = sola_instance.SolaTrykk       ()
 solatid          = sola_instance.Solatid         ()
 
+
+
 hvilken          = int(input("0 graf, 1 histogram, 2 trykkforskjell"))
+
+if hvilken > 2:
+    print("solatid", solatid )
+    print("runtid", runetid)
+
+
 
 
 if hvilken       == 0:
@@ -34,7 +41,6 @@ if hvilken       == 0:
     plt.grid    ()
     plt.legend  ()
     plt.show    ()
-
 
 if hvilken == 1: 
 
@@ -59,13 +65,12 @@ if hvilken == 1:
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
-
+"""
 if hvilken == 2:
         plt.plot(runetid  , rune_gj         , label = "Trykkforskjell")
         plt.show()
 
-
-
 else: 
     print("feil input")
     
+"""

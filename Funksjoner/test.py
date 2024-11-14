@@ -173,10 +173,10 @@ class Data():
         return self.solaTrykk
     
     def GjennomsnittTempogTrykk(self):
-        return print(self.maksTempforskjell)
+        return (self.maksTempforskjell)
     def GjennomsnittTempogTrykk(self):
-        return print(self.minTempforskjell)
+        return (self.minTempforskjell)
     def GjennomsnittTempogTrykk(self):
-        return print(self.maksTrykkforskjell)
+        return (self.maksTrykkforskjell)
     def GjennomsnittTempogTrykk(self):
-        return print(self.minTrykkforskjell)
+        return (self.minTrykkforskjell)
