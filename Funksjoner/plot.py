@@ -60,7 +60,7 @@ if hvilken == 1:
         
         axes[row, col].hist         (temperatures, bins=range(min_temp, max_temp + 2), edgecolor='black', color='skyblue')
         axes[row, col].set_title    (navn[i])
-        axes[row, col].set_xlabel   ('Temperature (°C)')
+        axes[row, col].set_xlabel   ('Temp °C')
         axes[row, col].set_ylabel   ('Frekvens')
         axes[row, col].grid         (axis='y', alpha=0.75)
 
@@ -70,7 +70,12 @@ if hvilken == 1:
 
 if hvilken == 2:
         plt.plot(runetid  , trykkforskjel         , label = "Trykkforskjell")
-        plt.show()
+
+        plt.title("Trykkforskjell: barometrisk vs absolutt")
+        plt.grid    ()
+        plt.legend  ()
+        plt.show    ()
+        
 
 else: 
     print("feil input")

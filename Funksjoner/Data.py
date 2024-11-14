@@ -116,7 +116,6 @@ class Data():
                         trykk_bar = row[2].replace(',', '.')
                         if trykk_bar:
                             self.RuneTrykkBar.append(float(trykk_bar))
-                            self.RuneTrykkBarTid.append(base_time)
                         else:
                             self.RuneTrykkBar.append(np.nan) 
                 except Exception as e:
@@ -135,7 +134,7 @@ class Data():
         self.smoothed_df = df  
 
     def Trykk_diff(self):
-        self.smoothed_df['pressure_diff'] = self.smoothed_df['abs_pressure'] - self.smoothed_df['bar_pressure']
+        self.smoothed_df['pressure_diff'] = abs(self.smoothed_df['abs_pressure'] - self.smoothed_df['bar_pressure'])
         
         self.smoothed_df['smoothed_diff'] = self.smoothed_df['pressure_diff'].rolling(window=21, center=True).mean()
 
