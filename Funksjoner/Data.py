@@ -1,28 +1,34 @@
 
 import csv
 import datetime as dt
+import numpy as np
+import pandas as pd
+
 
 class Data(): 
     def __init__(self, filnavn):
 
         self.filnavn     = filnavn
 
-        self.solaTemp    = []
-        self.solaTid     = []
-        self.solaTrykk   = []
+        self.solaTemp        = []
+        self.solaTid         = []
+        self.solaTrykk       = []
     
-        self.SaudaTemp   = []
-        self.SaudaTid    = []
-        self.SaudaTrykk  = []
+        self.SaudaTemp       = []
+        self.SaudaTid        = []
+        self.SaudaTrykk      = []
     
-        self.SinnesTemp  = []
-        self.SinnesTid   = []
-        self.SinnesTrykk = []    
+        self.SinnesTemp      = []
+        self.SinnesTid       = []
+        self.SinnesTrykk     = []    
 
-        self.RuneTemp    = []
-        self.RuneTid     = []
-        self.RuneTrykkBar= []
-        self.RuneTrykkAbs= []
+        self.RuneTemp        = []
+        self.RuneTid         = []
+        self.RuneTrykkBar    = []
+        self.RuneTrykkAbs    = []
+        self.RuneTrykkBarTid = []
+        self.RuneTrykkforskjell = []
+        self.RuneTrykkSmoothing  = []
 
         if self.filnavn  == "Filer/temperatur_trykk_met_samme_rune_time_datasett.csv.txt":
             self.Soladata  ()
@@ -105,11 +111,37 @@ class Data():
                         self.RuneTid     .append(base_time)
                         self.RuneTemp    .append(float(row[4].replace(',', '.')))
                         self.RuneTrykkAbs.append(float(row[3].replace(',', '.')))
-                        self.RuneTrykkBar.append(float(row[2].replace(',', '.')))
-                        
+
+
+                        trykk_bar = row[2].replace(',', '.')
+                        if trykk_bar:
+                            self.RuneTrykkBar.append(float(trykk_bar))
+                            self.RuneTrykkBarTid.append(base_time)
+                        else:
+                            self.RuneTrykkBar.append(np.nan) 
                 except Exception as e:
                     print(f"Error processing row {i}: {e}")
                     continue
+    
+
+        self.interpoler_data()
+        self.Trykk_diff()
+
+        #Fikk hjelp fra en data-ingeniør fra NTNU
+    def interpoler_data(self):
+        df = pd.DataFrame({'time': self.RuneTid, 'abs_pressure': self.RuneTrykkAbs, 'bar_pressure': self.RuneTrykkBar})
+    
+        df['bar_pressure'] = df['bar_pressure'].interpolate(method='linear')
+        self.smoothed_df = df  
+
+    def Trykk_diff(self):
+        self.smoothed_df['pressure_diff'] = self.smoothed_df['abs_pressure'] - self.smoothed_df['bar_pressure']
+        
+        self.smoothed_df['smoothed_diff'] = self.smoothed_df['pressure_diff'].rolling(window=21, center=True).mean()
+
+        self.pressure_diff = self.smoothed_df['pressure_diff'].tolist()
+        self.smoothed_diff = self.smoothed_df['smoothed_diff'].tolist()
+
 
 
     def Solatemp(self):

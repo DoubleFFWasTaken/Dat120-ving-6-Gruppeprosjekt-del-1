@@ -1,11 +1,13 @@
 from Data import Data
 from matplotlib import pyplot as plt
+import pandas as pd
 
 rune_instance    = Data("Filer/trykk_og_temperaturlogg_rune_time.csv.txt")
 runetemp         = rune_instance.Runetemp        ()  
 runetrykkAbs     = rune_instance.RunetrykkAbs    ()
 runetrykkBar     = rune_instance.RunetrykkBar    ()
-runetid          = rune_instance.Runetid         ()    
+runetid          = rune_instance.Runetid         ()
+trykkforskjel    = rune_instance.smoothed_diff
 
 sirdal_instance  = Data("Filer/temperatur_trykk_sauda_sinnes_samme_tidsperiode.csv.txt")
 sinnestemp       = sirdal_instance.Sinnestemp    ()
@@ -65,12 +67,11 @@ if hvilken == 1:
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
-"""
+
 if hvilken == 2:
-        plt.plot(runetid  , rune_gj         , label = "Trykkforskjell")
+        plt.plot(runetid  , trykkforskjel         , label = "Trykkforskjell")
         plt.show()
 
 else: 
     print("feil input")
     
-"""
